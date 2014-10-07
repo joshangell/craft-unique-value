@@ -8,12 +8,14 @@ var uniqueValueDelay = (function(){
 
 
 function uniqueValueRefresh($input) {
-  var $spinner    = $input.parent().find('.spinner'),
-      $error      = $input.parent().find('.error'),
-      $success    = $input.parent().find('.success'),
+  var $parent     = $input.parent(),
+      $spinner    = $parent.find('.spinner'),
+      $error      = $parent.find('.error'),
+      $success    = $parent.find('.success'),
       value       = $input.val(),
       fieldHandle = $input.prev('.uniquevalue-fieldhandle').val(),
       entryId     = $('input[name="entryId"]').val();
+
   $spinner.removeClass('hidden');
   $error.addClass('hidden');
   $success.addClass('hidden');
@@ -34,11 +36,32 @@ function uniqueValueRefresh($input) {
       $spinner.addClass('hidden');
       $error.addClass('hidden');
       $success.removeClass('hidden');
+
+      $parent.next('.uniquevalue-suggestion').fadeOut(200, function(){
+        $(this).remove();
+      });
     } else {
-      console.log(msg.suggestion);
       $spinner.addClass('hidden');
       $error.removeClass('hidden');
       $success.addClass('hidden');
+
+      // suggestion
+      if ( msg.suggestion ) {
+        $parent.next('.uniquevalue-suggestion').remove();
+        $suggestion = $('<div class="uniquevalue-suggestion btn small">Try ‘'+msg.suggestion+'’</div>').hide();
+
+        $suggestion
+          .insertAfter($parent)
+          .fadeIn('200')
+          .on('click', function(e){
+            e.preventDefault();
+            $input.val(msg.suggestion);
+            $(this).fadeOut(200, function(){
+              $(this).remove();
+              $input.trigger('keyup');
+            });
+          });
+      }
     }
   });
 

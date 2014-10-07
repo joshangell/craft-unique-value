@@ -15,3 +15,11 @@
   top: 6px;
   right: 6px;
 }
+
+
+.uniquevalue-suggestion {
+  display: inline-block;
+  *display: inline;
+  zoom: 1;
+  margin-left: 12px;
+}
