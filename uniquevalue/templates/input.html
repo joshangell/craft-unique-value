@@ -1,5 +1,6 @@
 <div class="uniquevalue" size="20">
-  <input class="text nicetext" type="text" id="{{ name }}" name="{{ name }}" value="{{ value }}" autocomplete="off" placeholder="">
+  <input class="uniquevalue-fieldhandle" type="hidden" id="fieldHandle" name="fieldHandle" value="{{ name }}">
+  <input class="text  nicetext  uniquevalue-value" type="text" id="{{ name }}" name="{{ name }}" value="{{ value }}" autocomplete="off" placeholder="">
   <div class="spinner hidden" title="I’ll be right back with that, hang tight..."></div>
   <div class="error hidden" data-icon="alert" title="Sorry that value has already been used, please try a different one."></div>
   <div class="success hidden" data-icon="check" title="Yay! It looks like that value is unique."></div>

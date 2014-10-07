@@ -8,18 +8,24 @@ var uniqueValueDelay = (function(){
 
 
 function uniqueValueRefresh($input) {
-  var $spinner = $input.parent().find('.spinner'),
-      $error   = $input.parent().find('.error'),
-      $success = $input.parent().find('.success');
+  var $spinner    = $input.parent().find('.spinner'),
+      $error      = $input.parent().find('.error'),
+      $success    = $input.parent().find('.success'),
+      value       = $input.val(),
+      fieldHandle = $input.prev('.uniquevalue-fieldhandle').val(),
+      entryId     = $('input[name="entryId"]').val();
   $spinner.removeClass('hidden');
   $error.addClass('hidden');
   $success.addClass('hidden');
 
-  var value = $input.val(),
-      request = $.ajax({
+  var request = $.ajax({
         url: '/actions/uniqueValue/validate',
         type: 'POST',
-        data: { value : value },
+        data: {
+          value       : value,
+          fieldHandle : fieldHandle,
+          entryId     : entryId
+        },
         dataType: 'json'
       });
 
@@ -29,6 +35,7 @@ function uniqueValueRefresh($input) {
       $error.addClass('hidden');
       $success.removeClass('hidden');
     } else {
+      console.log(msg.suggestion);
       $spinner.addClass('hidden');
       $error.removeClass('hidden');
       $success.addClass('hidden');
@@ -39,6 +46,7 @@ function uniqueValueRefresh($input) {
     $spinner.addClass('hidden');
     $error.removeClass('hidden');
     $success.addClass('hidden');
+
   });
 
 }
@@ -46,7 +54,7 @@ function uniqueValueRefresh($input) {
 
 $(function(){
 
-  $(document).on('keyup', '.uniquevalue input', function(e){
+  $(document).on('keyup', '.uniquevalue-value', function(e){
     var $t = $(this);
     uniqueValueDelay(function(){
       uniqueValueRefresh($t);
@@ -55,7 +63,7 @@ $(function(){
 
   $(window).on('load', function(){
 
-    $('.uniquevalue input').each(function(i, elem){
+    $('.uniquevalue-value').each(function(i, elem){
       uniqueValueRefresh($(elem));
     });
 

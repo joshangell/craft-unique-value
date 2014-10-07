@@ -13,23 +13,83 @@ namespace Craft;
 class UniqueValueService extends BaseApplicationComponent
 {
 
-  public function validate($value)
+  public function validate($entryId, $fieldHandle, $value)
   {
 
     // populate model and validate
+    $errors = array();
+    $model = new UniqueValueModel;
+    $model->uniqueValue = array(
+      'value'       => $value,
+      'fieldHandle' => $fieldHandle,
+      'elementId'   => $entryId
+    );
 
-    return array('success' => true);
+    // validate the model
+    if ( !$model->validate() ) {
+      $errors = array_merge($errors, $model->getErrors('uniqueValue'));
+    }
 
-    // return array(
-    //   'success' => false,
-    //   'suggestion' => 'boo'
-    // );
+    // return errors or true
+    if ($errors)
+    {
 
+      // first check if value ends in a number
+      $regex = preg_match('/[0-9]+$/', $value, $match);
+      if ( $regex && is_numeric($match[0]) )
+      {
+        $i = $match[0];
+      }
+      else
+      {
+        $i = 0;
+      }
 
-    // if success, return now
+      // now loop
+      do {
 
-    // we didn't validate so make a suggestion we know
-    // will validate and return it
+        // add to number
+        $i++;
+
+        // strip any numbers from the end of the value
+        $newValue = preg_replace("/\d+$/","",$value);
+
+        // and append our suggestion to the stripped value
+        $suggestion = $newValue . $i;
+
+        // try validating again
+        $model = new UniqueValueModel;
+
+        $model->uniqueValue = array(
+          'value'       => $suggestion,
+          'fieldHandle' => $fieldHandle,
+          'elementId'   => $entryId
+        );
+
+        // if it passed, set $i to false to break out of our loop
+        if ( $model->validate() )
+        {
+          $i = false;
+        }
+
+      } while ($i > 0);
+
+      // return false and suggestion
+      return array(
+        'success' => false,
+        'suggestion' => $suggestion
+      );
+
+    }
+    else
+    {
+
+      // yay!
+      return array(
+        'success' => true
+      );
+
+    }
 
   }
 

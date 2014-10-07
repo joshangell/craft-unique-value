@@ -21,8 +21,10 @@ class UniqueValueController extends BaseController
     $this->requireAjaxRequest();
 
     // get value and send to service for validation and alternate suggestions
-    $value = craft()->request->getPost('value');
-    $result = craft()->uniqueValue->validate($value);
+    $value       = craft()->request->getPost('value');
+    $fieldHandle = craft()->request->getPost('fieldHandle');
+    $entryId     = craft()->request->getPost('entryId');
+    $result      = craft()->uniqueValue->validate($entryId, $fieldHandle, $value);
 
     // return json response
     if ( $result['success'] ) {
