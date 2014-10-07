@@ -1,0 +1,25 @@
+.uniquevalue {
+  display: inline-block;
+  *display: inline;
+  zoom: 1;
+  position: relative;
+}
+.uniquevalue .spinner {
+  position: absolute;
+  top: 0;
+  right: 0;
+}
+.uniquevalue .error,
+.uniquevalue .success {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+}
+
+
+.uniquevalue-suggestion {
+  display: inline-block;
+  *display: inline;
+  zoom: 1;
+  margin-left: 12px;
+}

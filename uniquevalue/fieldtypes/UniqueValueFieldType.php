@@ -20,10 +20,15 @@ class UniqueValueFieldType extends BaseFieldType
 
   public function getInputHtml($name, $value)
   {
+
+    craft()->templates->includeCssResource('uniquevalue/style.css');
+    craft()->templates->includeJsResource('uniquevalue/app.js');
+
     return craft()->templates->render('uniquevalue/input', array(
       'name'  => $name,
       'value' => $value
     ));
+
   }
 
   public function validate($value)
