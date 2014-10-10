@@ -47,14 +47,21 @@ class UniqueValueFieldType extends BaseFieldType
 
     // make and populate our model
     $model = new UniqueValueModel;
+    $elementId = null;
+    if ( isset($this->element) )
+    {
+      $elementId = $this->element->id;
+    }
+
     $model->uniqueValue = array(
       'value'       => $value,
       'fieldHandle' => $this->model->handle,
-      'elementId'   => $this->element->id
+      'elementId'   => $elementId
     );
 
     // validate the model
-    if ( !$model->validate() ) {
+    if ( !$model->validate() )
+    {
       $errors = array_merge($errors, $model->getErrors('uniqueValue'));
     }
 
