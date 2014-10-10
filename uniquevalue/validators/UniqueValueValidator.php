@@ -49,8 +49,9 @@ class UniqueValueValidator extends CValidator
     // reset command for next stage
     $command->reset();
 
-    // if there is something returned, then we're not valid!
-    if ( count($rows) >= 1 ) {
+    // if we had an elementId and there was something returned, then we're not valid!
+    if ( ! is_null($elementId) && count($rows) >= 1 )
+    {
       $message = Craft::t("Sorry, that value already exists.");
       $this->addError($object, $attribute, $message);
     }
