@@ -39,18 +39,24 @@ class UniqueValueValidator extends CValidator
     $command = craft()->db->createCommand();
 
     // get all fields of type UniqueValue
-    $rows = $command
+    $command
       ->select('elementId')
       ->from('content')
-      ->where($fieldHandle.' = :fieldContent', array(':fieldContent' => $fieldValue))
-      ->andWhere('elementId != :id', array(':id' => $elementId))
-      ->queryAll();
-
+      ->where($fieldHandle.' = :fieldContent', array(':fieldContent' => $fieldValue));
+    
+    // if we have an elementId, exclude that from the search.
+	if( ! is_null($elementId) )
+	{
+	  $command->andWhere('elementId != :id', array(':id' => $elementId));
+	}
+      
+    $rows = $command->queryAll();
+    
     // reset command for next stage
     $command->reset();
 
-    // if we had an elementId and there was something returned, then we're not valid!
-    if ( ! is_null($elementId) && count($rows) >= 1 )
+    // if there was something returned, then we're not valid!
+    if ( count($rows) >= 1 )
     {
       $message = Craft::t("Sorry, that value already exists.");
       $this->addError($object, $attribute, $message);
