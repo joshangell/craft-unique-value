@@ -43,17 +43,14 @@ class UniqueValueValidator extends CValidator
       ->select('elementId')
       ->from('content')
       ->where($fieldHandle.' = :fieldContent', array(':fieldContent' => $fieldValue));
-    
-    // if we have an elementId, exclude that from the search.
-	if( ! is_null($elementId) )
-	{
-	  $command->andWhere('elementId != :id', array(':id' => $elementId));
-	}
-      
+
+    // if we have an elementId and its not empty (probably a new entry), exclude that from the search.
+    if( ! is_null($elementId) && $elementId !== '' )
+    {
+      $command->andWhere('elementId != :id', array(':id' => $elementId));
+    }
+
     $rows = $command->queryAll();
-    
-    // reset command for next stage
-    $command->reset();
 
     // if there was something returned, then we're not valid!
     if ( count($rows) >= 1 )
